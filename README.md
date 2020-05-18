@@ -1,0 +1,1 @@
+# vs-code-format-on-save
