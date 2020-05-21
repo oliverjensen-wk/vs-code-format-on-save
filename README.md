@@ -22,6 +22,6 @@ In the case you do not utilize a line-length setting as part of DartDev but are 
 1. In the dropdown for "Extensions", find "OverReact Format..." and click on it.
 1. Enter a value for "Format on Save: Custom Line Length".
 
-__NOTE:__ Both that and `Detect Custom Line Length` cannot be set at the same time. If `Custom Line Length` is greater than `0`, it is considered set. In this occurs, `Custom Line Length` will take precendence and auto detection will be skipped. 
+__NOTE:__ Both this and `Detect Custom Line Length` cannot be set at the same time. If `Custom Line Length` is greater than `0`, it is considered set. In both are set, `Custom Line Length` will take precendence and auto detection will be skipped. 
 
 **Enjoy!**
