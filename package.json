@@ -1,8 +1,9 @@
 {
 	"name": "over-react-format-on-save",
-	"displayName": "over_react_format_on_save",
-	"description": "",
+	"displayName": "OverReact Format on Save",
+	"description": "Runs Workiva's OverReact Format tool on every save.",
 	"version": "0.0.1",
+	"publisher": "Workiva",
 	"engines": {
 		"vscode": "^1.44.0"
 	},
@@ -17,11 +18,11 @@
 		"commands": [
 			{
 				"command": "extension.enableFormatOnSave",
-				"title": "Format On Save: Enable"
+				"title": "OverReact Format On Save: Enable"
 			},
 			{
 				"command": "extension.disableFormatOnSave",
-				"title": "Format On Save: Disable"
+				"title": "OverReact Format On Save: Disable"
 			}
 		],
 		"configuration": {
@@ -31,7 +32,7 @@
 				"formatOnSave.detectCustomLineLength": {
 					"Title": "Detect Custom Line-Length",
 					"type": "boolean",
-					"description": "Attempt to autodetect custom line-length. If you are using Dart Dev have a `dev.dart` file with a custom line-length defined, you can set this to true to use that line-length.",
+					"description": "Attempt to autodetect custom line-length. If you are using Dart Dev have a `tool/dart_dev/config.dart` file with a custom line-length defined, you can set this to true to use that line-length.",
 					"default": false
 				}
 			}
@@ -45,6 +46,7 @@
 		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/test/runTest.js"
 	},
+	"icon": "images/OverReact_Logo.png",
 	"devDependencies": {
 		"@types/vscode": "^1.44.0",
 		"@types/glob": "^7.1.1",
