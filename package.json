@@ -29,6 +29,12 @@
 			"title": "OverReact Format On Save",
 			"type": "object",
 			"properties": {
+				"formatOnSave.customLineLength": {
+					"Title": "Custom Line-Length",
+					"type": "number",
+					"description": "The line-length the formatter should use. Note that both this and `Detect Custom Line-Length` cannot be set at the same time. If this is set (i.e. greater than 0) and `Detect Custom Line-Length` is `true`, this property will take precedence.",
+					"minimum": 0
+				},
 				"formatOnSave.detectCustomLineLength": {
 					"Title": "Detect Custom Line-Length",
 					"type": "boolean",

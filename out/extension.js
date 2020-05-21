@@ -6,9 +6,9 @@ function activate(context) {
     let extension = new RunFormatOnSave(context);
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => {
         extension.loadConfig();
-    }), vscode.commands.registerCommand('extension.enableFromatOnSave', () => {
+    }), vscode.commands.registerCommand('extension.enableFormatOnSave', () => {
         extension.setEnabled(true);
-    }), vscode.commands.registerCommand('extension.disableFromatOnSave', () => {
+    }), vscode.commands.registerCommand('extension.disableFormatOnSave', () => {
         extension.setEnabled(false);
     }), vscode.workspace.onDidSaveTextDocument((document) => {
         extension.onDocumentSave(document);
@@ -51,9 +51,20 @@ class RunFormatOnSave {
         }
         this.showChannelMessage(`Running OverReact Format...`);
         const projectDir = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.path : "";
+        const customLineLength = this.config.get('customLineLength', 0);
         const shouldDetectLineLength = this.config.get('detectCustomLineLength');
-        const detectLineLengthFlag = shouldDetectLineLength ? "--detect-line-length" : "";
-        const command = `pub run over_react_format ${document.fileName} -p ${projectDir} ${detectLineLengthFlag}`;
+        const shouldUseCustomLineLength = customLineLength > 0;
+        let command;
+        if (shouldUseCustomLineLength && shouldDetectLineLength) {
+            this.showChannelMessage(`Both a custom line-length value and detectCustomLineLength set to true. Skipping line-length detection.`);
+        }
+        if (shouldUseCustomLineLength) {
+            command = `pub global run over_react_format ${document.fileName} -l ${customLineLength}`;
+        }
+        else {
+            const detectLineLengthFlag = shouldDetectLineLength && !shouldUseCustomLineLength ? "--detect-line-length" : "";
+            command = `pub global run over_react_format ${document.fileName} -p ${projectDir} ${detectLineLengthFlag}`;
+        }
         this.showChannelMessage(command);
         let child = child_process_1.exec(command);
         child.stdout.on('data', data => this.channel.append(data.toString()));
