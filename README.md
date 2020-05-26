@@ -1,4 +1,4 @@
-# OverReact Format on Save
+# OverReact Format on Save VS Code Extension
 This is a VS Code extension meant to enable OverReact Format to run when a file is saved. This is reliant on having `over_react_format: ^3.1.0` as a dependency in your Dart project. 
 
 ## Setting up the extension
