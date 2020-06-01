@@ -39,7 +39,7 @@
 					"Title": "Detect Custom Line-Length",
 					"type": "boolean",
 					"description": "Attempt to autodetect custom line-length. If you are using Dart Dev have a `tool/dart_dev/config.dart` file with a custom line-length defined, you can set this to true to use that line-length.",
-					"default": false
+					"default": true
 				}
 			}
 		}

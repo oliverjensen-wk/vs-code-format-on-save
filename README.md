@@ -7,7 +7,7 @@ This is a VS Code extension meant to enable OverReact Format to run when a file 
 1. You're good to go!
 
 ## Enabling Line-Length Detection
-This extension has the capability to pull a line-length from the standard `dart_dev/config.dart` file used to configure Workiva's DartDev tool. If your library contains the config file and has a line-length specified, this is how to enable that feature:
+This extension has the capability to pull a line-length from the standard `dart_dev/config.dart` file used to configure Workiva's DartDev tool. This is enabled by default. In the event that you do not have a configuration for line-length or just need to turn that flag off, this is how to toggle the feature:
 
 1. Go to VS Code's settings (__&#8984; + ,__ by default).
 1. Navigate to the Extension settings, using the menu on the left of the settings window.
