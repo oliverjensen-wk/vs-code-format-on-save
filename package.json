@@ -49,8 +49,7 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"lint": "eslint src --ext ts",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint"
+		"watch": "tsc -watch -p ./"
 	},
 	"icon": "images/OverReact_Logo.png",
 	"devDependencies": {

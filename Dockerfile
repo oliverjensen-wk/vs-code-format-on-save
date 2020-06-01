@@ -1,3 +1,7 @@
-FROM node:12.16.1-alpine
+FROM node:12.17.0-alpine
 
-RUN yarn install
+WORKDIR /usr/src/extension
+
+COPY . .
+
+RUN yarn install && yarn cache clean && yarn run eslint src --ext ts
