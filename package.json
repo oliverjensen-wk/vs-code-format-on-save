@@ -4,6 +4,7 @@
 	"description": "Runs Workiva's OverReact Format tool on every save.",
 	"version": "0.0.1",
 	"publisher": "Workiva",
+	"repository": "https://github.com/Workiva/vs-code-format-on-save/",
 	"engines": {
 		"vscode": "^1.44.0"
 	},

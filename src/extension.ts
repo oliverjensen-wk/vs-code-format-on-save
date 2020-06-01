@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as vscode from 'vscode';
-import {exec, ChildProcess} from 'child_process'
+import * as process from 'child_process'
 
 export function activate(context: vscode.ExtensionContext) {
-	let extension = new RunFormatOnSave(context);
+	const extension = new RunFormatOnSave(context);
 
 	context.subscriptions.push(
 		vscode.workspace.onDidChangeConfiguration(() => {
@@ -55,7 +55,7 @@ class RunFormatOnSave {
 	}
 	
 	private showEnablingChannelMessage () {
-		let message = `Run OverReact Format on Save is ${this.getEnabled() ? 'enabled' : 'disabled'}`;
+		const message = `Run OverReact Format on Save is ${this.getEnabled() ? 'enabled' : 'disabled'}`;
 		this.showChannelMessage(message);
 		this.showStatusMessage(message);
 	}
@@ -74,7 +74,7 @@ class RunFormatOnSave {
 	}
 
 	private showStatusMessage(message: string) {
-		let disposable = vscode.window.setStatusBarMessage(message, 3000);
+		const disposable = vscode.window.setStatusBarMessage(message, 3000);
 		this.context.subscriptions.push(disposable);
 	}
 
@@ -105,7 +105,7 @@ class RunFormatOnSave {
 
 		this.showChannelMessage(command);
 
-		let child:ChildProcess = exec(command, {cwd: projectDir});
+		const child:process.ChildProcess = process.exec(command, {cwd: projectDir});
 
 		child.stdout!.on('data', data => this.channel.append(data.toString()));
 		child.stderr!.on('data', data => this.channel.append(data.toString()));
