@@ -97,16 +97,16 @@ class RunFormatOnSave {
 		}
 
 		if (shouldUseCustomLineLength) {
-			command =  `pub global run over_react_format ${document.fileName} -l ${customLineLength}`;
+			command =  `pub run over_react_format ${document.fileName} -l ${customLineLength}`;
 		} else {
 			const detectLineLengthFlag = shouldDetectLineLength && !shouldUseCustomLineLength ? "--detect-line-length" : "";
-			command =  `pub global run over_react_format ${document.fileName} -p ${projectDir} ${detectLineLengthFlag}`;
+			command =  `pub run over_react_format ${document.fileName} -p ${projectDir} ${detectLineLengthFlag}`;
 		} 
 
 		this.showChannelMessage(command);
 
-		let child:ChildProcess = exec(command);
-		
+		let child:ChildProcess = exec(command, {cwd: projectDir});
+
 		child.stdout!.on('data', data => this.channel.append(data.toString()));
 		child.stderr!.on('data', data => this.channel.append(data.toString()));
 
