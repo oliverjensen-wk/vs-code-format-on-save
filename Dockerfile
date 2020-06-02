@@ -4,4 +4,4 @@ WORKDIR /usr/src/extension
 
 COPY . .
 
-RUN yarn install && yarn cache clean && yarn run eslint src --ext ts
+RUN yarn install && yarn run eslint src --ext ts
