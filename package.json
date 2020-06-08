@@ -1,7 +1,7 @@
 {
 	"name": "over-react-format-on-save",
 	"displayName": "OverReact Format on Save",
-	"description": "Runs Workiva's OverReact Format tool on every save.",
+	"description": "A Dart project formatting tool that enables formatting on file save. Attempts to use OverReact Format but defaults to dartfmt.",
 	"version": "0.0.1",
 	"publisher": "Workiva",
 	"repository": "https://github.com/Workiva/vs-code-format-on-save/",
