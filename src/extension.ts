@@ -14,6 +14,8 @@
 
 import * as vscode from 'vscode';
 import * as process from 'child_process'
+import * as yaml from 'yaml';
+import { existsSync, readFileSync } from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
 	const extension = new RunFormatOnSave(context);
@@ -43,11 +45,49 @@ class RunFormatOnSave {
 	private context: vscode.ExtensionContext;
 	private config!: vscode.WorkspaceConfiguration;
 	private channel: vscode.OutputChannel = vscode.window.createOutputChannel('Format on save')
+	private projectDir = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.path : "";
+	private useOverReactFormat:Boolean = false; 
 
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
 		this.loadConfig();
 		this.showEnablingChannelMessage();
+
+		if (existsSync(`${this.projectDir}/pubspec.yaml`)) {
+			const pubspec:yaml.Document = yaml.parseDocument(readFileSync(`${this.projectDir}/pubspec.yaml`,  'utf8'));
+			if (pubspec.contents.has('dev_dependencies')) {
+				const dev_dependencies = pubspec.contents.get('dev_dependencies');
+				this.useOverReactFormat = dev_dependencies.has('over_react_format');
+			}
+		}
+		// No else condition because there's no penalty for the project not being a Dart project.
+		// The `onDocumentSave` command will just be short-circuited if it is run on non-Dart files.
+	}
+
+	buildCommand(document: vscode.TextDocument) {
+		let command:string;
+
+		const customLineLength = this.config.get<Number>('customLineLength', 0);
+		const shouldDetectLineLength = this.config.get<Boolean>('detectCustomLineLength');
+		const shouldUseCustomLineLength = customLineLength > 0;
+
+		if (shouldUseCustomLineLength && shouldDetectLineLength) {
+			this.showChannelMessage(`Both a custom line-length value and detectCustomLineLength set to true. Skipping line-length detection.`);
+		}
+
+		if (this.useOverReactFormat) {
+			if (shouldUseCustomLineLength) {
+				command =  `pub run over_react_format ${document.fileName} -l ${customLineLength}`;
+			} else {
+				const detectLineLengthFlag = shouldDetectLineLength && !shouldUseCustomLineLength ? "--detect-line-length" : "";
+				command =  `pub run over_react_format ${document.fileName} -p ${this.projectDir} ${detectLineLengthFlag}`;
+			} 
+		} else {
+			// TODO add logic to detect line-length from dart_dev's config.dart
+			command = `dartfmt -w ${document.fileName} ${shouldUseCustomLineLength ? `-l ${customLineLength}` : ''}`;
+		}
+
+		return command;
 	}
 
 	loadConfig() {
@@ -83,29 +123,13 @@ class RunFormatOnSave {
 			return;
 		}
 
-		this.showChannelMessage(`Running OverReact Format...`);
-		const projectDir = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.path : "";
+		this.showChannelMessage(`Running ${this.useOverReactFormat ? 'OverReact Format' : 'dartfmt'}...`);
 
-		const customLineLength = this.config.get<Number>('customLineLength', 0);
-		const shouldDetectLineLength = this.config.get<Boolean>('detectCustomLineLength');
-		const shouldUseCustomLineLength = customLineLength > 0;
-
-		let command; 
-
-		if (shouldUseCustomLineLength && shouldDetectLineLength) {
-			this.showChannelMessage(`Both a custom line-length value and detectCustomLineLength set to true. Skipping line-length detection.`);
-		}
-
-		if (shouldUseCustomLineLength) {
-			command =  `pub run over_react_format ${document.fileName} -l ${customLineLength}`;
-		} else {
-			const detectLineLengthFlag = shouldDetectLineLength && !shouldUseCustomLineLength ? "--detect-line-length" : "";
-			command =  `pub run over_react_format ${document.fileName} -p ${projectDir} ${detectLineLengthFlag}`;
-		} 
+		const command = this.buildCommand(document); 
 
 		this.showChannelMessage(command);
 
-		const child:process.ChildProcess = process.exec(command, {cwd: projectDir});
+		const child:process.ChildProcess = process.exec(command, {cwd: this.projectDir});
 
 		child.stdout!.on('data', data => this.channel.append(data.toString()));
 		child.stderr!.on('data', data => this.channel.append(data.toString()));
