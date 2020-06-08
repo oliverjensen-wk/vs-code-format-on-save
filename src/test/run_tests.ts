@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { runTests } from 'vscode-test';
+import { runTests, downloadAndUnzipVSCode } from 'vscode-test';
 
 // Copyright 2020 Workiva Inc.
 //
@@ -15,6 +15,7 @@ import { runTests } from 'vscode-test';
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 async function main() {
   try {
     // The folder containing the Extension Manifest package.json
@@ -25,8 +26,10 @@ async function main() {
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, './index');
 
-    // Download VS Code, unzip it and run the integration test
-    await runTests({ extensionDevelopmentPath, extensionTestsPath });
+    const vsCodePath = await downloadAndUnzipVSCode("stable", 'linux-x64');
+    console.log('vs code path', vsCodePath);
+    
+    await runTests({ extensionDevelopmentPath, extensionTestsPath, vscodeExecutablePath: vsCodePath });
   } catch (err) {
     console.error(err);
     console.error('Failed to run tests');
