@@ -26,11 +26,11 @@ export function activate(context: vscode.ExtensionContext) {
 			extension.loadConfig();
 		}),
 
-		vscode.commands.registerCommand('extension.enableFormatOnSave', () => {
+		vscode.commands.registerCommand('overReactFormatOnSave.enableOverReactFormatOnSave', () => {
 			extension.setEnabled(true);
 		}),
 
-		vscode.commands.registerCommand('extension.disableFormatOnSave', () => {
+		vscode.commands.registerCommand('overReactFormatOnSave.disableOverReactFormatOnSave', () => {
 			extension.setEnabled(false);
 		}),
 

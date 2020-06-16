@@ -18,11 +18,11 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.enableOverReactFormatOnSave",
+				"command": "overReactFormatOnSave.enableOverReactFormatOnSave",
 				"title": "OverReact Format On Save: Enable"
 			},
 			{
-				"command": "extension.disableOverReactFormatOnSave",
+				"command": "overReactFormatOnSave.disableOverReactFormatOnSave",
 				"title": "OverReact Format On Save: Disable"
 			}
 		],
