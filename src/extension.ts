@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}),
 
 		vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
-			extension.onDocumentSave(document);
+				extension.onDocumentSave(document);
 		})
 	);
 
@@ -45,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 class RunFormatOnSave {
 	private context: vscode.ExtensionContext;
 	private config!: vscode.WorkspaceConfiguration;
-	private channel: vscode.OutputChannel = vscode.window.createOutputChannel('Format on save')
+	private channel: vscode.OutputChannel = vscode.window.createOutputChannel('OverReact Format On Save')
 	private projectDir = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.path : "";
 	private useOverReactFormat:Boolean = false; 
 

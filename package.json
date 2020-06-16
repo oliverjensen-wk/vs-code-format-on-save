@@ -18,11 +18,11 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.enableFormatOnSave",
+				"command": "extension.enableOverReactFormatOnSave",
 				"title": "OverReact Format On Save: Enable"
 			},
 			{
-				"command": "extension.disableFormatOnSave",
+				"command": "extension.disableOverReactFormatOnSave",
 				"title": "OverReact Format On Save: Disable"
 			}
 		],
@@ -30,13 +30,13 @@
 			"title": "OverReact Format On Save",
 			"type": "object",
 			"properties": {
-				"formatOnSave.customLineLength": {
+				"overReact.formatOnSave.customLineLength": {
 					"Title": "Custom Line-Length",
 					"type": "number",
 					"description": "The line-length the formatter should use. Note that both this and `Detect Custom Line-Length` cannot be set at the same time. If this is set (i.e. greater than 0) and `Detect Custom Line-Length` is `true`, this property will take precedence.",
 					"minimum": 0
 				},
-				"formatOnSave.detectCustomLineLength": {
+				"overReact.formatOnSave.detectCustomLineLength": {
 					"Title": "Detect Custom Line-Length",
 					"type": "boolean",
 					"description": "Attempt to autodetect custom line-length. If you are using Dart Dev have a `tool/dart_dev/config.dart` file with a custom line-length defined, you can set this to true to use that line-length.",
