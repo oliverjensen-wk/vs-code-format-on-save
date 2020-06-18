@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const orfVersion = '^3.0.0';
+
 export const pubspecHeader = `
 name: over_react_format
 publish_to: https://pub.workiva.org
@@ -20,54 +22,89 @@ environment:
   sdk: '>=2.3.0 <3.0.0'     
 `;
 
-export const pubspecWithOverReactFormat = `
+export const orfDevDependency = `
 ${pubspecHeader}
 dependencies:
   analyzer: '>=0.38.4 <0.40.0'
     
 dev_dependencies:
-  over_react_format: ^3.0.0
+  over_react_format: ${orfVersion}
 `;
 
-export const pubspecWithoutOverReactFormat = `
+export const withoutOrf = `
 ${pubspecHeader}
 dependencies:
   analyzer: '>=0.38.4 <0.40.0'
     
 dev_dependencies:
-  random_package: ^3.0.0
+  random_package: ${orfVersion}
 `;
 
-export const pubspecWithEmptyDevDependencySection = `
+export const emptyDependencies = `
 ${pubspecHeader}
 dependencies:
-  analyzer: '>=0.38.4 <0.40.0'
     
 dev_dependencies:
 `;
 
-export const pubspecWithOverReactFormatCommentedOut = `
+export const orfDevDependencyCommentedOut = `
 ${pubspecHeader}
 dependencies:
   analyzer: '>=0.38.4 <0.40.0'
     
 dev_dependencies:
-#  over_react_format: ^3.0.0
+#  over_react_format: ${orfVersion}
   aRandomDependency: ^1.0.0
 `;
 
-export const pubspecWithoutDevDependencies = `
+export const noDependencies = `
 ${pubspecHeader}    
-dependencies:
-  analyzer: '>=0.38.4 <0.40.0'
 `;
 
-export const pubspecWithOverReactFormatAsDependency = `
+export const orfAsDependency = `
 ${pubspecHeader}  
 dependencies:
   analyzer: '>=0.38.4 <0.40.0'
-  over_react_format: ^3.0.0
+  over_react_format: ${orfVersion}
 
 dev_dependencies:
-  random_package: ^3.0.0
+  random_package: ${orfVersion}
+`;
+
+export const orfHighMinValue = `
+${pubspecHeader}  
+dependencies:
+  analyzer: '>=0.38.4 <0.40.0'
+  over_react_format: ^3.8.0
+
+dev_dependencies:
+  random_package: 2.3.0
+`;
+
+
+export const orfHostDependency = `
+${pubspecHeader}  
+dependencies:
+  analyzer: '>=0.38.4 <0.40.0'
+  over_react_format:
+    hosted:
+      name: over_react_format
+      url: https://aHostedUrl.org
+    version: ^3.1.0
+
+dev_dependencies:
+  random_package: 2.3.0
+`;
+
+export const orfHostDevDependency = `
+${pubspecHeader}  
+dependencies:
+  analyzer: '>=0.38.4 <0.40.0'
+
+dev_dependencies:
+  over_react_format:
+    hosted:
+      name: over_react_format
+      url: https://aHostedUrl.org
+    version: ${orfVersion}
 `;

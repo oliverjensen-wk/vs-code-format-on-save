@@ -14,9 +14,9 @@
 
 import * as vscode from 'vscode';
 import * as process from 'child_process'
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 
-import { devDependenciesContains } from './extension_utils';
+import { devDependenciesContains, dependencyHasValidMinVersion } from './extension_utils';
 
 export function activate(context: vscode.ExtensionContext) {
 	const extension = new RunFormatOnSave(context);
@@ -45,7 +45,9 @@ export function activate(context: vscode.ExtensionContext) {
 class RunFormatOnSave {
 	private context: vscode.ExtensionContext;
 	private config!: vscode.WorkspaceConfiguration;
-	private channel: vscode.OutputChannel = vscode.window.createOutputChannel('OverReact Format On Save')
+	private channel: vscode.OutputChannel = vscode.window.createOutputChannel('OverReact Format On Save');
+	private minOverReactFormatVersion = '>=3.1.0';
+	private overReactFormatKey = 'over_react_format';
 	private projectDir = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.path : "";
 	private useOverReactFormat:Boolean = false; 
 
@@ -55,7 +57,13 @@ class RunFormatOnSave {
 		this.showEnablingChannelMessage();
 
 		if (existsSync(`${this.projectDir}/pubspec.yaml`)) {
-			this.useOverReactFormat = devDependenciesContains('over_react_format', `${this.projectDir}/pubspec.yaml`);
+			const pubspecContainsOverReactFormat = devDependenciesContains(this.overReactFormatKey, readFileSync(`${this.projectDir}/pubspec.yaml`, 'utf-8'));
+			const overReactFormatRangeIsValid = dependencyHasValidMinVersion(this.overReactFormatKey, this.minOverReactFormatVersion, readFileSync(`${this.projectDir}/pubspec.yaml`, 'utf-8'), true);
+
+			if (pubspecContainsOverReactFormat && !overReactFormatRangeIsValid) {
+				this.showChannelMessage(`OverReact Format range is not acceptable. Bump the minimum to 3.1.0 to use OverReact Format on Save.`);
+			}
+			this.useOverReactFormat =  pubspecContainsOverReactFormat && overReactFormatRangeIsValid;
 		}
 		// No else condition because there's no penalty for the project not being a Dart project.
 		// The `onDocumentSave` command will just be short-circuited if it is run on non-Dart files.
@@ -88,7 +96,7 @@ class RunFormatOnSave {
 	}
 
 	loadConfig() {
-		this.config = vscode.workspace.getConfiguration('formatOnSave');
+		this.config = vscode.workspace.getConfiguration('overReact.formatOnSave');
 	}
 	
 	private showEnablingChannelMessage () {

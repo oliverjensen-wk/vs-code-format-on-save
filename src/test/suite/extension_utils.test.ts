@@ -16,56 +16,92 @@ import * as assert from 'assert';
 import { test, suite } from 'mocha';
 
 import * as c from './constants';
-import { devDependenciesContains } from '../../extension_utils';
-import { existsSync, unlinkSync, writeFileSync } from 'fs';
+import { devDependenciesContains, dependencyHasValidMinVersion } from '../../extension_utils';
 
-suite('Extension Test', () => {
+suite('Extension Utilities Tests', () => {
   suite('devDependenciesContains', () => {
-    const tempPubspecPath = './test_pubspec.yaml'
-    suiteTeardown(() => {
-      if (existsSync(tempPubspecPath)) {
-        unlinkSync(tempPubspecPath);
-      }
-    });
-
-    function createPubspec(contents:string):void {
-      writeFileSync(tempPubspecPath, contents, 'utf8');
-      assert.equal(existsSync(tempPubspecPath), true);
-    }
-
     suite('returns true when', () => {
       test('dev_dependencies has that dependency', () => {
-        createPubspec(c.pubspecWithOverReactFormat);
-        assert.equal(devDependenciesContains('over_react_format', tempPubspecPath), true);
+        assert.equal(devDependenciesContains('over_react_format', c.orfDevDependency), true);
       });
     });
 
     suite('returns false when', () => {
       test('the dependency is under "dependencies" and not "dev_dependencies"', () => {
-        createPubspec(c.pubspecWithOverReactFormatAsDependency);
-        assert.equal(devDependenciesContains('over_react_format', tempPubspecPath), false);
+        assert.equal(devDependenciesContains('over_react_format', c.orfAsDependency), false);
       });
 
       test('the dependency is commented out', () => {
-        createPubspec(c.pubspecWithOverReactFormatCommentedOut);
-        assert.equal(devDependenciesContains('over_react_format', tempPubspecPath), false);
+        assert.equal(devDependenciesContains('over_react_format', c.orfDevDependencyCommentedOut), false);
       });
 
       test('the dependency is not there', () => {
-        createPubspec(c.pubspecWithoutOverReactFormat);
-        assert.equal(devDependenciesContains('over_react_format', tempPubspecPath), false);
+        assert.equal(devDependenciesContains('over_react_format', c.withoutOrf), false);
       });
 
       test('there is no dev_dependency section', () => {
-        createPubspec(c.pubspecWithoutDevDependencies);
-        assert.equal(devDependenciesContains('over_react_format', tempPubspecPath), false);
+        assert.equal(devDependenciesContains('over_react_format', c.noDependencies), false);
       });
     });
 
     suite('does not error when', () => {
       test('the dev_dependency section is empty', () => {
-        createPubspec(c.pubspecWithEmptyDevDependencySection);
-        assert.equal(devDependenciesContains('over_react_format', tempPubspecPath), false);
+        assert.equal(devDependenciesContains('over_react_format', c.emptyDependencies), false);
+      });
+    });
+  });
+
+  suite('dependencyHasValidMinVersion', () => {
+    const orfMinVersion = '>=3.0.0';
+    const over_react_format_key = 'over_react_format';
+
+    suite('returns true when', () => {
+      test('the dependency is higher than necessary', () => {
+        assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.orfHighMinValue), true);
+      });
+
+      suite('the dependency is a simple key value pair', () => {
+        test('and the dependency is within "dependencies" and within the given range', () => {
+          assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.orfAsDependency), true);
+        });
+  
+        test('and the dependency is within "dev_dependencies" and within the given range', () => {
+          assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.orfDevDependency, true), true);
+        });
+      })
+
+      suite('the dependency is hosted', () => {
+        test('and the dependency is within "dependencies" and within the given range', () => {
+          assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.orfHostDependency), true);
+        });
+  
+        test('and the dependency is within "dev_dependencies" and within the given range', () => {
+          assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.orfHostDevDependency, true), true);
+        });
+      });
+    });
+
+    suite('returns false when', () => {
+      test('the dependency is not there', () => {
+        assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.withoutOrf), false);
+      });
+
+      test('there is no dependency section', () => {
+        assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.noDependencies), false);
+      });
+
+      test('there is no dev_dependency section', () => {
+        assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.noDependencies, true), false);
+      });
+    });
+
+    suite('does not error when', () => {
+      test('the dependency section is empty', () => {
+        assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.emptyDependencies), false);
+      });
+
+      test('the dev_dependency section is empty', () => {
+        assert.equal(dependencyHasValidMinVersion(over_react_format_key, orfMinVersion, c.emptyDependencies, true), false);
       });
     });
   });
