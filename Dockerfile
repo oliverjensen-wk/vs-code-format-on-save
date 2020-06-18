@@ -1,7 +1,18 @@
-FROM node:12.17-alpine3.11
+FROM amazonlinux:2
 
 WORKDIR /usr/src/extension
 
 COPY . .
 
-RUN yarn install && yarn compile && yarn lint
+RUN yum install -y \
+    gzip \
+    tar && \
+    rm -rf /var/cache/yum
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash && \
+    . ~/.nvm/nvm.sh && \
+    nvm install node && \
+    npm install yarn -g && \
+    yarn install  && \
+    yarn compile && \
+    yarn lint
